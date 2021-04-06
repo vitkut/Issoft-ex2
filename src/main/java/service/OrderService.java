@@ -3,6 +3,8 @@ package service;
 import model.Order;
 import model.OrderItem;
 import model.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistance.OrderItemStorage;
 import persistance.OrderStorage;
 
@@ -13,37 +15,43 @@ import java.util.Optional;
 //Service
 public class OrderService {
 
-    private OrderStorage orderStorage;
-    private OrderItemStorage orderItemStorage;
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
-    public OrderService(OrderStorage orderStorage, OrderItemStorage orderItemStorage) {
+    private OrderStorage orderStorage;
+
+    public OrderService(OrderStorage orderStorage) {
         this.orderStorage = orderStorage;
-        this.orderItemStorage = orderItemStorage;
     }
 
-    public String placeOrder(Order order){
+    public Integer placeOrder(Order order){
+        logger.debug("Starting placeOrder("+order+")");
         if(!OrderValidationService.validate(order)){
+            logger.debug("Finish placeOrder(): IllegalArgumentException: Order is not valid");
             throw new IllegalArgumentException("Order is not valid");
         }
-
         Optional<Order> orderFromStorage = orderStorage.findById(order.getId());
-        if(!orderFromStorage.isPresent()){
-            return "Order is already placed";
+        if(!orderFromStorage.equals(Optional.empty())){
+            logger.debug("Finish placeOrder(): IllegalArgumentException: Order is already placed");
+            throw new IllegalArgumentException("Order is already placed");
         }
-
         order.setStatus(Status.PROCESSED);
         Integer id = orderStorage.save(order);
-        return id.toString();
+        logger.debug("Finish placeOrder(): "+id.toString());
+        return id;
     }
 
     public ArrayList<Order> loadAllByUserId(String userId){
+        logger.debug("Starting loadAllByUserId("+userId+")");
         if(userId == null || userId.isEmpty()){
-            return null;
+            logger.debug("Finish loadAllByUserId(): IllegalArgumentException: Incorrect userId: ["+userId+"]");
+            throw new IllegalArgumentException("Incorrect userId: ["+userId+"]");
         }
         Optional<ArrayList<Order>> orders = orderStorage.findByUserId(userId);
-        if(orders.isPresent()){
+        if(!orders.equals(Optional.empty())){
+            logger.debug("Finish loadAllByUserId(): "+orders.get());
             return orders.get();
         }
+        logger.debug("Finish loadAllByUserId(): null");
         return null;
     }
 }

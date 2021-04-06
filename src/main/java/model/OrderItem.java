@@ -24,4 +24,13 @@ public class OrderItem {
     public Double getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "name='" + name + '\'' +
+                ", count=" + count +
+                ", price=" + price +
+                '}';
+    }
 }
