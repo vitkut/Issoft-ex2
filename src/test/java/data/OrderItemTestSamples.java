@@ -1,6 +1,5 @@
 package data;
 
-import model.Order;
 import model.OrderItem;
 
 public class OrderItemTestSamples {

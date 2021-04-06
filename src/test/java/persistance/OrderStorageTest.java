@@ -1,9 +1,7 @@
 package persistance;
 
-import data.OrderItemTestSamples;
 import data.OrderTestSamples;
 import model.Order;
-import model.OrderItem;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

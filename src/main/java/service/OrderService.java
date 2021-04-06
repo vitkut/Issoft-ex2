@@ -1,11 +1,9 @@
 package service;
 
 import model.Order;
-import model.OrderItem;
 import model.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import persistance.OrderItemStorage;
 import persistance.OrderStorage;
 
 
